@@ -10,9 +10,17 @@ Descripción: Actividad 4 - Procesos
 #include <sys/wait.h>
 #include <ctype.h>
 
+typedef struct {
+    int id;
+    double promedio;
+} Hijo;
+
 int main(int argc, char * const * argv){
     int dato;
+    pid_t pid;
+    int estado;
     int cantidadDeHijos;
+    int hijosCreados = 0;
     char * cvalue = NULL;
 
     opterr = 0;
@@ -52,6 +60,46 @@ int main(int argc, char * const * argv){
             break;
         }
     }
+
+    Hijo * hijos = (Hijo *) malloc(sizeof(Hijo) * cantidadDeHijos);
+    Hijo * fin = hijos + cantidadDeHijos;
+    Hijo * h = hijos;
+    int i = 0;
+
+    while ((h < fin) && (i < cantidadDeHijos)){
+        pid = fork();
+
+        if (pid == -1){
+            printf("Hubo un error al crear el proceso hijo %d\n", i);
+            printf("Procesos hijos creados hasta el momento: %d\n", hijosCreados);
+
+            break;
+        }
+
+        else if (pid == 0){
+            ++hijosCreados;
+            
+            printf("Estamos en el proceso hijo con PID = %d y su padre es PPID = %d\n", getpid(), getppid());
+            exit(0);
+        }
+
+        else {
+            printf("Estamos en el proceso padre con PID = %d\n", getpid());
+
+            if (waitpid(pid, &estado, 0) != -1){
+                if (WIFEXITED(estado)){
+                    printf("Ya termino el hijo con PID %d con valor de retorno %d\n", pid, WEXITSTATUS(estado));
+                }
+            }
+
+            printf("\n");
+        }
+
+        ++h;
+        ++i;
+    }
+
+    free(hijos);
 
     return 0;
 }
