@@ -77,8 +77,6 @@ int main(int argc, char * const * argv){
         }
 
         else if (pid == 0){
-            ++hijosCreados;
-            
             printf("Estamos en el proceso hijo con PID = %d y su padre es PPID = %d\n", getpid(), getppid());
             exit(0);
         }
@@ -89,6 +87,7 @@ int main(int argc, char * const * argv){
             if (waitpid(pid, &estado, 0) != -1){
                 if (WIFEXITED(estado)){
                     printf("Ya termino el hijo con PID %d con valor de retorno %d\n", pid, WEXITSTATUS(estado));
+                    ++hijosCreados;
                 }
             }
 
@@ -98,6 +97,8 @@ int main(int argc, char * const * argv){
         ++h;
         ++i;
     }
+
+    // printf("Hijos creados: %d", hijosCreados);
 
     free(hijos);
 
