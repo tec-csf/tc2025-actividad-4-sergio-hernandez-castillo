@@ -138,7 +138,7 @@ void histograma(Hijo * hijos, Hijo * fin){
     for (Hijo * h = hijos; h < fin; ++h){
         printf("%d \t\t%d \t\t", h->id, h->promedio);
 
-        for (int i = 0; i < ((h->promedio * 7) / maximo); ++i){
+        for (int i = 0; i < ((h->promedio * 5) / maximo); ++i){
             printf("*");
         }
 
