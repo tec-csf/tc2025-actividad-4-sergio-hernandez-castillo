@@ -15,6 +15,8 @@ typedef struct {
     int promedio;
 } Hijo;
 
+void histograma(Hijo * hijos, Hijo * fin);
+
 int main(int argc, char * const * argv){
     int dato;
     int valorPromedio;
@@ -78,10 +80,8 @@ int main(int argc, char * const * argv){
         }
 
         else if (pid == 0){
-            printf("Estamos en el proceso hijo con PID = %d y su padre es PPID = %d\n", getpid(), getppid());
-
             int promedio = (getppid() + getpid()) / 2;
-            printf("Regresando un promedio de %d\n", promedio);
+            printf("Estamos en el proceso hijo con PID = %d, su padre es PPID = %d y su promedio es %d\n", getpid(), getppid(), promedio);
             
             sleep(1);
 
@@ -114,14 +114,34 @@ int main(int argc, char * const * argv){
         ++h;
     }
 
-    printf("\n\n");
+    printf("\n");
 
-    for (Hijo * h = hijos; h < fin; ++h){
-        printf("ID: %d \nPromedio: %d\n", h->id, h->promedio);
-    }
+    histograma(hijos, fin);
 
     free(ids);
     free(hijos);
 
     return 0;
+}
+
+void histograma(Hijo * hijos, Hijo * fin){
+    int maximo = 0;
+
+    for (Hijo * h = hijos; h < fin; ++h){
+        if (h->promedio > maximo){
+            maximo = h->promedio;
+        }
+    }
+
+    printf("PID Hijo \tPromedio \tHistograma\n\n");
+
+    for (Hijo * h = hijos; h < fin; ++h){
+        printf("%d \t\t%d \t\t", h->id, h->promedio);
+
+        for (int i = 0; i < ((h->promedio * 7) / maximo); ++i){
+            printf("*");
+        }
+
+        printf("\n\n");
+    }
 }
