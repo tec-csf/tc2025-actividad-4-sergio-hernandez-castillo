@@ -117,29 +117,39 @@ int main(int argc, char * const * argv){
         ++i;
     }
 
-    Hijo * hijos = (Hijo *) malloc(sizeof(Hijo) * hijosCreados);
-    Hijo * fin = hijos + hijosCreados;
-    Hijo * h = hijos;
-    pos = ids;
+    if (hijosCreados == 0){
+        printf("No se pudo crear más de un hijo.");
 
-    while ((h < fin) && (pos < total)){
-        if (waitpid(*pos, &valorPromedio, 0) != -1){
-            if (WIFEXITED(valorPromedio)){
-                h->id = *pos;
-                h->promedio = WEXITSTATUS(valorPromedio);
-            }
-        }
+        free(ids);
 
-        ++pos;
-        ++h;
+        return 0;
     }
 
-    printf("\n");
+    else if (hijosCreados > 0){
+        Hijo * hijos = (Hijo *) malloc(sizeof(Hijo) * hijosCreados);
+        Hijo * fin = hijos + hijosCreados;
+        Hijo * h = hijos;
+        pos = ids;
 
-    histograma(hijos, fin);
+        while ((h < fin) && (pos < total)){
+            if (waitpid(*pos, &valorPromedio, 0) != -1){
+                if (WIFEXITED(valorPromedio)){
+                    h->id = *pos;
+                    h->promedio = WEXITSTATUS(valorPromedio);
+                }
+            }
 
-    free(ids);
-    free(hijos);
+            ++pos;
+            ++h;
+        }
 
-    return 0;
+        printf("\n");
+
+        histograma(hijos, fin);
+
+        free(ids);
+        free(hijos);
+
+        return 0;
+    }
 }
