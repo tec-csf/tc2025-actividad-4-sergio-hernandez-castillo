@@ -15,11 +15,30 @@ typedef struct {
     int promedio;
 } Hijo;
 
-void histograma(Hijo * hijos, Hijo * fin);
+void histograma(Hijo * hijos, Hijo * fin){
+    int maximo = 0;
+
+    for (Hijo * h = hijos; h < fin; ++h){
+        if (h->promedio > maximo){
+            maximo = h->promedio;
+        }
+    }
+
+    printf("PID Hijo \tPromedio \tHistograma\n\n");
+
+    for (Hijo * h = hijos; h < fin; ++h){
+        printf("%d \t\t%d \t\t", h->id, h->promedio);
+
+        for (int i = 0; i < ((h->promedio * 5) / maximo); ++i){
+            printf("*");
+        }
+
+        printf("\n\n");
+    }
+}
 
 int main(int argc, char * const * argv){
     int dato;
-    int valorPromedio;
     int cantidadDeHijos;
     char * cvalue = NULL;
 
@@ -62,10 +81,11 @@ int main(int argc, char * const * argv){
     }
 
     pid_t * ids = malloc(sizeof(pid_t) * cantidadDeHijos);
-    int * total = ids + cantidadDeHijos;
-    int * pos = ids;
+    pid_t * total = ids + cantidadDeHijos;
+    pid_t * pos = ids;
     int i = 0;
     int hijosCreados = 0;
+    int valorPromedio;
     pid_t pid;
 
     while ((pos < total) && (i < cantidadDeHijos)){
@@ -98,7 +118,7 @@ int main(int argc, char * const * argv){
     }
 
     Hijo * hijos = (Hijo *) malloc(sizeof(Hijo) * hijosCreados);
-    Hijo * fin = hijos + cantidadDeHijos;
+    Hijo * fin = hijos + hijosCreados;
     Hijo * h = hijos;
     pos = ids;
 
@@ -122,26 +142,4 @@ int main(int argc, char * const * argv){
     free(hijos);
 
     return 0;
-}
-
-void histograma(Hijo * hijos, Hijo * fin){
-    int maximo = 0;
-
-    for (Hijo * h = hijos; h < fin; ++h){
-        if (h->promedio > maximo){
-            maximo = h->promedio;
-        }
-    }
-
-    printf("PID Hijo \tPromedio \tHistograma\n\n");
-
-    for (Hijo * h = hijos; h < fin; ++h){
-        printf("%d \t\t%d \t\t", h->id, h->promedio);
-
-        for (int i = 0; i < ((h->promedio * 5) / maximo); ++i){
-            printf("*");
-        }
-
-        printf("\n\n");
-    }
 }
