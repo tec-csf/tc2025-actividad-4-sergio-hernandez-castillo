@@ -2,6 +2,8 @@
 Autór: Sergio Hernandez Castillo
 Matrícula: A01025210
 Descripción: Actividad 4 - Procesos
+
+Nota: Trabajé junto con Daniel Roa en este ejercicio.
 */
 
 #include <stdio.h>
