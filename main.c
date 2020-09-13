@@ -41,7 +41,7 @@ void histograma(Hijo * hijos, Hijo * fin){
 
 int main(int argc, char * const * argv){
     int dato;
-    int cantidadDeHijos;
+    int cantidadDeHijos = 0;
     char * cvalue = NULL;
 
     opterr = 0;
